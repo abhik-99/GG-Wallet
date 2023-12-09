@@ -4,11 +4,9 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import useTheme from "@mui/material/styles/useTheme";
-import PasswordIcon from "@mui/icons-material/Password";
-import React from "react";
 import { useAccount } from "wagmi";
 import Box from "@mui/material/Box";
-import { IconButton } from "@mui/material";
+import { Verify } from "../../components/Verify";
 
 export const Profile = () => {
   const { address } = useAccount();
@@ -43,9 +41,7 @@ export const Profile = () => {
               <Typography variant="body2" color="red">
                 Unverified
               </Typography>
-              <IconButton >
-                <PasswordIcon color="success"/>
-              </IconButton>
+              <Verify />
             </Box>
           </Paper>
         </Grid>
