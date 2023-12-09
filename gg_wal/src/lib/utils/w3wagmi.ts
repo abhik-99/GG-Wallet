@@ -1,11 +1,12 @@
-import { createConfig, configureChains, mainnet } from 'wagmi'
+import { createConfig, configureChains } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
 import { CHAIN_NAMESPACES } from '@web3auth/base';
 import { Web3Auth } from '@web3auth/modal';
+import { baseGoerli, polygonMumbai, sepolia } from 'viem/chains';
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
+  [baseGoerli, polygonMumbai, sepolia],
   [publicProvider()],
 )
 
