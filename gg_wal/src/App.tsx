@@ -1,10 +1,9 @@
-import CustomAppbar from "./components/CustomAppbar";
-import Wallet from "./pages/wallets/page";
+import { Landing } from "./pages/landing/page";
 
 function App() {
   return (
     <div style={{minHeight: "100vh", width: "100%"}}>
-      <CustomAppbar /> <Wallet />
+      <Landing />
     </div>
   );
 }
