@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { SybilContractModule } from './sybil-contract/sybil-contract.module';
 import { ChainModule } from './chain/chain.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [UserModule, SybilContractModule, ChainModule],
+  imports: [UserModule, SybilContractModule, ChainModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })
