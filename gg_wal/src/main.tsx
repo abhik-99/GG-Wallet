@@ -14,6 +14,8 @@ import { Profile } from "./pages/profile/page.tsx";
 import { Trigger } from "./pages/trigger/page.tsx";
 import { MnM } from "./pages/mnm/page.tsx";
 import { Onboarding } from "./pages/onboarding/page.tsx";
+import { WagmiConfig } from "wagmi";
+import { wagmiConfig } from "./lib/utils";
 
 const router = createBrowserRouter([
   {
@@ -49,9 +51,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <WagmiConfig config={wagmiConfig}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <RouterProvider router={router} />
     </ThemeProvider>
+    </WagmiConfig>
   </React.StrictMode>
 );
