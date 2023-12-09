@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(uuid())
+  walletAddress String
+  verified      Boolean    @default(false)
+  anonAdhaarPcd String?
+  sybilNfts     SybilNFT[]
+}
+
+model SybilNFT {
+  id                   BigInt        @id
+  contract             SybilContract @relation(fields: [sybilContractChainId], references: [id])
+  sybilContractChainId String
+  User                 User?         @relation(fields: [userId], references: [id])
+  userId               String?
+}
+
+model SmartContractWallet {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  address      String
+  chain        Chain    @relation(fields: [chainChainId], references: [chainId])
+  chainChainId String
+}
+
+model SybilContract {
+  id              String     @id @default(uuid())
+  contractAddress String
+  chain           Chain      @relation(fields: [chainChainId], references: [chainId])
+  SybilNFT        SybilNFT[]
+  chainChainId    String
+}
+
+model Chain {
+  chainId              String                @unique
+  chainName            String
+  sybilContracts       SybilContract[]
+  smartContractWallets SmartContractWallet[]
+}

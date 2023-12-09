@@ -9,8 +9,8 @@ The following things need to be implemented
     3. Should be able to sign message and send back so that the sybil NFT contracts can verify.
     4. Should be able to store Wallets Created and Beneficiaries for each wallet.
 2. Smart Contract:
-    1. Create the Factory Contract for GGWAccount on Base and Polygon Mumbai.
+    1. Create the Factory Contract for GGWAccount on Base and Polygon Mumbai - **Done**
     2. Deploy and test the Factory for deploying new Accounts.
     3. Deploy and Test the GGWAccount for operations.
-    4. Integrate Chainlink CCIP into SybilNFT and SybilNFTResolver.
+    4. Integrate Chainlink CCIP into SybilNFT and SybilNFTResolver - **Done**
     5. Deploy and Test SybilNFT contracts on Base, Polygon Mumbai and Sepolia.
