@@ -1,26 +1,74 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
+import { privateKeyToAccount } from 'viem/accounts'
+import { createWalletClient, http } from 'viem';
+import { mainnet } from 'viem/chains'
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
+  create({ walletAddress }: CreateUserDto) {
+    return this.prismaService.user.create({
+      data: {
+        walletAddress,
+      },
+    });
+  }
+  async generateSig(walletAddress: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        walletAddress,
+      },
+    });
+    if (!user.verified) throw new UnauthorizedException('User is not Verified');
+    const walletClient = createWalletClient({
+      chain: mainnet,
+      transport: http()
+      
+    })
+    const account = privateKeyToAccount(`0x${this.configService.get<string>("OWNER_PRIV_KEY")}`)
+    console.log("Owner Account recovered", account);
+    const sig = await walletClient.signMessage({
+      account,
+      message: walletAddress
+    })
+
+    return {sig};
+  }
+
+  verifyUser(walletAddress: string, anonAdhaarPcd: string) {
+    return this.prismaService.user.update({
+      where: {
+        walletAddress,
+      },
+      data: {
+        anonAdhaarPcd,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.prismaService.user.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(walletAddress: string) {
+    return this.prismaService.user.findFirst({
+      where: {
+        walletAddress,
+      },
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(walletAddress: string) {
+    return this.prismaService.user.delete({
+      where: {
+        walletAddress,
+      },
+    });
   }
 }
