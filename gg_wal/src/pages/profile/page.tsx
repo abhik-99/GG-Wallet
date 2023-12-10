@@ -7,19 +7,58 @@ import useTheme from "@mui/material/styles/useTheme";
 import { useAccount } from "wagmi";
 import Box from "@mui/material/Box";
 import { Verify } from "../../components/Verify";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 
 import polygon from "../../assets/images/polygon.png";
 import ButtonBase from "@mui/material/ButtonBase";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AnonAadhaarProof } from "anon-aadhaar-react";
+
+type UserData = {
+  walletAddress: string;
+  createdAt: string;
+  updatedAt: string;
+  verified: boolean;
+  anonAdhaarPcd: null | string;
+};
 
 export const Profile = () => {
-  const { address } = useAccount();
+  const [user, setUser] = useState<UserData>();
+
+  const { address, isConnected } = useAccount();
   const theme = useTheme();
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function checkStatus() {
+      if (!isConnected) navigate("/");
+      const res = await fetch(`http://localhost:3000/user/${address}`);
+      const response = await res.json();
+      if (response.statusCode === 404) navigate("/");
+    }
+    checkStatus();
+  }, []);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const res = await fetch(`http://localhost:3000/user/${address}`);
+      const userData = await res.json();
+      setUser(userData);
+    }
+    fetchUser();
+  }, []);
+
+  console.log("USER:", user);
+
   return (
     <Container>
       <Typography variant="h2">Your Profile</Typography>
-      <Grid container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-end"
+      >
         <Grid item xs={12} md={4}>
           <Paper
             sx={{
@@ -43,10 +82,20 @@ export const Profile = () => {
                 alignItems: "center",
               }}
             >
-              <Typography variant="body2" color="red">
-                Unverified
-              </Typography>
-              <Verify />
+              {user?.verified ? (
+                <Typography variant="body2" color="success">
+                  Verified
+                </Typography>
+              ) : (
+                <Typography variant="body2" color="red">
+                  Unverified
+                </Typography>
+              )}
+              {user?.verified ? (
+                <AnonAadhaarProof code={user.anonAdhaarPcd as string} />
+              ) : (
+                <Verify />
+              )}
             </Box>
           </Paper>
         </Grid>
@@ -77,7 +126,6 @@ export const Profile = () => {
                     width={100}
                     style={{
                       borderRadius: theme.shape.borderRadius,
-                      
                     }}
                   />
                 </ButtonBase>
@@ -97,7 +145,6 @@ export const Profile = () => {
                     width={100}
                     style={{
                       borderRadius: theme.shape.borderRadius,
-                      
                     }}
                   />
                 </ButtonBase>
@@ -117,7 +164,6 @@ export const Profile = () => {
                     width={100}
                     style={{
                       borderRadius: theme.shape.borderRadius,
-                      
                     }}
                   />
                 </ButtonBase>
@@ -125,19 +171,17 @@ export const Profile = () => {
             </Grid>
           </Paper>
         </Grid>
-        <Grid xs={10}>
-        <Paper
+        <Grid item xs={10}>
+          <Paper
             sx={{
-              my:1,
+              my: 1,
               height: 200,
               p: 2,
               // background: "transparent",
               border: `solid ${theme.palette.grey[700]} 3px`,
               mt: 2,
             }}
-          >
-
-          </Paper>
+          ></Paper>
         </Grid>
       </Grid>
     </Container>

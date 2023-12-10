@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useAuth } from "../../lib/hooks";
 
 export const Onboarding = () => {
-  const {handleSignIn, handleSignOut} = useAuth()
+  const {handleSignIn} = useAuth()
   return (
     <Container
       sx={{height: "100vh",  display: "flex", justifyContent: "center", alignItems: "center" }}
