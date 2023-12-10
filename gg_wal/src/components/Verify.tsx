@@ -12,12 +12,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import { useAccount } from "wagmi";
+import Typography from "@mui/material/Typography";
 
 export const Verify = () => {
   const [open, setOpen] = useState(false);
   const {address: walletAddr} = useAccount()
-  const [anonAadhaar] = useAnonAadhaar();
-  const status = useMemo(() => anonAadhaar.status, [anonAadhaar.status])
+  const [anonAadhaar, ] = useAnonAadhaar();
 
   useEffect(() => {
     console.log("Anon Aadhaar status changed: ", anonAadhaar.status);
@@ -37,7 +37,8 @@ export const Verify = () => {
       }
       updateVerification()
     }
-  }, [status]);
+  }, [anonAadhaar]);
+  console.log("HELLO:", anonAadhaar, anonAadhaar.status)
   return (
     <>
       <AnonAadhaarProvider _appId={import.meta.env.VITE_APP_ANON_AADHAR_APP_ID}>
@@ -48,6 +49,7 @@ export const Verify = () => {
           <DialogTitle>Verify Personhood</DialogTitle>
           <DialogContent>
             <LogInWithAnonAadhaar />
+            <Typography>{anonAadhaar.status}</Typography>
           </DialogContent>
           <DialogActions>
             <Button

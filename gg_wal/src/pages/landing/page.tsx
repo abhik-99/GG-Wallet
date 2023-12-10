@@ -21,8 +21,10 @@ export const Landing = () => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h3">Welcome</Typography>
-        <Typography variant="h4" color="text.secondary">
+        <Typography variant="h1" mb={1}>GG Wallet</Typography>
+        <Typography variant="body1" color="text.secondary"mb={5}>Redefining the Identity Layer</Typography>
+        <Typography variant="h4">Welcome</Typography>
+        <Typography variant="h5" color="text.secondary">
           You know where to click.
         </Typography>
         <Box
