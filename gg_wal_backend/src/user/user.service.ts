@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
@@ -48,6 +48,7 @@ export class UserService {
       },
       data: {
         anonAdhaarPcd,
+        verified: true
       },
     });
   }
@@ -56,12 +57,14 @@ export class UserService {
     return this.prismaService.user.findMany();
   }
 
-  findOne(walletAddress: string) {
-    return this.prismaService.user.findFirst({
+  async findOne(walletAddress: string) {
+    const user = await this.prismaService.user.findFirst({
       where: {
         walletAddress,
       },
     });
+    if(!user) throw new NotFoundException("User Not Found!");
+    return user
   }
 
   remove(walletAddress: string) {
